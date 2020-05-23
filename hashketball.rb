@@ -1,6 +1,5 @@
-# Write your code here!
-
 require 'pry'
+
 
 def game_hash
   {
@@ -213,17 +212,109 @@ def player_stats(players_name)
 end
 
 
+# def big_shoe_rebounds
+#   # returns the rebounds of the player with the largest shoe size
+#   game_hash.each do |place, team|
+#     team.each do |attribute, data|
+#       if attribute == :players
+#         data.each do |player|
+#           if player[:shoe] == 19
+#             return player[:rebounds]
+#           end
+#         end
+#       end
+#     end
+#   end
+# end
+
+# alternate method
 def big_shoe_rebounds
-  # returns the rebounds of the player with the largest shoe size
-  game_hash.each do |place, team|
-    team.each do |attribute, data|
-      if attribute == :players
-        data.each do |player|
-          if player[:shoe] == 19
-            return player[:rebounds]
-          end
-        end
+  biggest = 0
+  rebounds = 0
+  game_hash.each do |home_away, keys|
+    keys[:players].each do |player|
+      size = player[:shoe]
+      if size > biggest
+        biggest = size
+        rebounds = player[:rebounds]
       end
     end
   end
+  rebounds
+end
+
+
+
+# def most_points_scored
+#   game_hash.each do |place, team|
+#     team.each do |attribute, data|
+#       if attribute == :players
+#         data.each do |player|
+#           if player[:points] == 33
+#             return player[:player_name]
+#           end
+#         end
+#       end
+#     end
+#   end
+# end
+
+# alternate more abstract method
+def most_points_scored
+  most_points = 0
+  mvp = ''
+  game_hash.each do |home_away, keys|
+    keys[:players].each do |player|
+      points = player[:points]
+      if points > most_points
+        most_points = points
+        mvp = player[:player_name]
+      end
+    end
+  end
+  mvp
+end
+
+
+
+def winning_team
+  total_points = 0
+  win_team = ''
+  game_hash.each do |home_away, keys|
+    team_points = 0
+    team_name = game_hash[home_away][:team_name]
+    keys[:players].each do |player|
+      points = player[:points]
+      team_points += points
+    end
+    win_team, total_points = team_name, team_points if team_points > total_points
+  end
+  return win_team
+end
+
+
+
+def player_with_longest_name
+  longest = ''
+  longest_length = 0
+  game_hash.each do |home_away, keys|
+    keys[:players].each do |player|
+      name_length = player[:player_name].length
+      longest, longest_length = player[:player_name], name_length if name_length > longest_length
+    end
+  end
+  return longest
+end
+
+
+
+def long_name_steals_a_ton?
+  steals_most = ''
+  most_steals = 0
+  game_hash.each do |home_away, keys|
+    keys[:players].each do |player|
+      steals_most, most_steals = player[:player_name], player[:steals] if player[:steals] > most_steals
+    end
+  end
+  return true if steals_most == player_with_longest_name
 end
